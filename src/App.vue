@@ -35,8 +35,10 @@
 
 <style lang="scss" scoped>
 	.pad {
-		padding-top: 50px;
+		padding: 50px 0 50px;
 		overflow-x: hidden;
+
+		
 	}
 	.toggle-enter {
 		opaticy: 0;

@@ -7,9 +7,11 @@
 			
 		</mt-swipe>
 		<ul class="mui-table-view mui-grid-view mui-grid-9">
-		  <li class="mui-table-view-cell mui-media mui-col-xs-4 "><a href="#">
+		  <li class="mui-table-view-cell mui-media mui-col-xs-4 ">
+		  <router-link to="/home/newslist">
 		    <span class="mui-icon mui-icon-home"></span>
-		    <div class="mui-media-body">新闻资讯</div></a></li>
+		    <div class="mui-media-body">新闻资讯</div>
+		    </router-link></li>
 		  <li class="mui-table-view-cell mui-media mui-col-xs-4 "><a href="#">
 		    <span class="mui-icon mui-icon-email"></span>
 		    <div class="mui-media-body">图片分享</div></a></li>
@@ -42,7 +44,7 @@
 		},
 		methods: {
 			getlunbotu(){
-				this.$http.get('http://www.liulongbin.top:3005/api/getlunbo').then(result => {
+				this.$http.get('api/getlunbo').then(result => {
 					if(result.body.status === 0){
 						this.lunbolist = result.body.message
 						// console.log(result.body);
