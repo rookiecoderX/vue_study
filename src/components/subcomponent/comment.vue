@@ -1,8 +1,9 @@
 <template>
 	<div class="cmt-container">
 		<h3>发表评论</h3>
-		<textarea placeholder="请输入评论" maxlength="120"></textarea>
-		<mt-button type="primary" size="large">发表评论</mt-button>
+		<hr>
+		<textarea placeholder="请输入评论" maxlength="120" v-model="msg"></textarea>
+		<mt-button type="primary" size="large" @click="postcomment">发表评论</mt-button>
 		<div class="cmt-list">
 			<div class="cmt-box" v-for="(item, index) in comments" :key="index">
 				<div class="cmt-title">第{{ index+1 }}楼&nbsp&nbsp用户：{{ item.user_name }}&nbsp&nbsp发表时间：{{ item.add_time | dateFormat }}}</div>
@@ -18,7 +19,8 @@
 		data(){
 			return {
 				comments: [],
-				pageindex: 1
+				pageindex: 1,
+				msg: ''
 			}
 		},
 		created(){
@@ -39,6 +41,24 @@
 			more(){
 				this.pageindex++
 				this.getcomments()
+			},
+			postcomment(){
+				if(this.msg.trim().length===0){
+					return Toast('内容不能为空')
+				}
+				this.$http.post('api/postcomment/'+this.$route.params.id, { content: this.msg.trim() })
+				.then(result => {
+					if(result.body.status===0){
+						var comment = {
+							user_name: '匿名用户',
+							add_time: Date.now(),
+							content: this.msg.trim()
+						}
+						this.comments.unshift(comment)
+						this.msg = ''
+					}
+
+				})
 			}
 		},
 		props: ['id']
@@ -52,6 +72,7 @@
 		textarea {
 			height: 85px;
 			margin: 0;
+			margin-bottom: 10px;
 		}
 		.cmt-list {
 
