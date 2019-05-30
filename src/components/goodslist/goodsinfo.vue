@@ -105,9 +105,16 @@
 			// 加入购物车
 			addCart(){
 				// this.ballFlag = true
+				var goodsinfo = {
+					id: this.id,
+					count: this.selectCount,
+					price: this.goodsinfo.sell_price,
+					selected: true
+				}
 				if(this.clickFlag === true){
 					this.clickFlag = false
 					this.ballFlag = true
+					this.$store.commit('addCart', goodsinfo)
 					setTimeout(() => {
 						this.clickFlag = true
 						}, 1000)

@@ -46,9 +46,96 @@ Vue.filter('dateFormat', function(dateStr, pattern = "YYYY-MM-DD HH:mm:ss"){
 
 import VuePreview from 'vue-preview'
 
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+let cart = JSON.parse(localStorage.getItem('car')||'[]')
+console.log(localStorage.getItem('car'));
+var store = new Vuex.Store({
+	state: {
+		cart
+	},
+	mutations: {
+		addCart(state, goodsinfo){
+			var flag = state.cart.some((item) => {
+				if(item.id ==goodsinfo.id){
+					item.count += parseInt(goodsinfo.count)
+					return true
+				}
+			})
+			if(!flag){
+				state.cart.push(goodsinfo)
+			}
+			localStorage.setItem('car', JSON.stringify(state.cart))
+			// console.log(state.cart)
+		},
+		updateCount(state, countInfo){
+			state.cart.some(item => {
+				if(item.id == countInfo.id){
+					item.count =parseInt(countInfo.count)
+					return true
+				}
+			})
+			localStorage.setItem('car', JSON.stringify(state.cart))
+		},
+		removeCart(state, id){
+			state.cart.some((item, index) => {
+				if(item.id == id){
+					state.cart.splice(index, 1)
+					return true
+				}
+			})
+			localStorage.setItem('car', JSON.stringify(state.cart))
+		}
+	},
+	getters: {
+		getBadge: function(state){
+			var sum = 0
+			state.cart.forEach((item) => {
+				sum += parseInt(item.count)
+			})
+			return sum
+		},
+		getCount: function(state){
+			var zidian = {}
+			state.cart.forEach(item => {
+				zidian[item.id] = item.count
+			})
+			return zidian
+		},
+		getSelected: function(state){
+			var selected = {}
+			state.cart.forEach(item => {
+				selected[item.id] = item.selected
+			})
+			return selected
+		},
+		getTotal: function(state){
+			var sum = 0
+			state.cart.forEach(item => {
+				if(item.selected === true){
+					sum += parseInt(item.count)
+				}
+			})
+			return sum
+		},
+		getPrice: function(state){
+			var price = 0
+			state.cart.forEach(item => {
+				if(item.selected === true){
+					price += item.count*item.price
+				}
+			})
+			return price
+		}
+	}
+})
+
 Vue.use(VuePreview)
 var vm = new Vue({
 	el: '#app',
 	render: c =>c(app),
-	router
+	router,
+	store
 })

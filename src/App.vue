@@ -1,7 +1,11 @@
 <template>
 	<div class="pad">
 		<!-- 顶部 -->
-		<mt-header fixed title="VUE"></mt-header>
+		<mt-header fixed title="VUE">
+			<span slot="left" @click="goBack" v-show="go_back_flag">
+				<mt-button icon="back">返回</mt-button>
+			</span>
+		</mt-header>
 		
 		<!-- render-view -->
 		<transition name="toggle">
@@ -18,7 +22,7 @@
 		<span class="mui-tab-label">会员</span>
 	</router-link>
 	<router-link class="mui-tab-item1" to="/cart">
-	<span class="mui-icon mui-icon-extra mui-icon-extra-cart"><span class="mui-badge" id="badge">0</span></span>
+	<span class="mui-icon mui-icon-extra mui-icon-extra-cart"><span class="mui-badge" id="badge">{{ $store.getters.getBadge }}</span></span>
 	<span class="mui-tab-label">购物车</span>
 </router-link>
 <router-link class="mui-tab-item1" to="/search">
@@ -30,7 +34,33 @@
 </template>
 
 <script>
-	
+	export default {
+		data(){
+			return {
+				go_back_flag: true
+			}
+		},
+		methods: {
+			goBack(){
+				this.$router.go(-1)
+			}
+		},
+		created(){
+			if(this.$route.path === '/home'){
+				this.go_back_flag = false
+			}
+		},
+		// 用watch监听路由变化
+		watch: {
+			'$route.path': function(newVal){
+				if(newVal === '/home'){
+					this.go_back_flag = false
+				}else{
+					this.go_back_flag = true
+				}
+			}
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
